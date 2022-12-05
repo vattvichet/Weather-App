@@ -1,5 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:clima/screens/loading_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
 import 'package:clima/services/weather.dart';
@@ -51,65 +53,87 @@ class _LocationScreenState extends State<LocationScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/location_background.jpg'),
+            image: AssetImage('images/appPhoto.jpeg'),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
                 Colors.white.withOpacity(0.8), BlendMode.dstATop),
           ),
         ),
         constraints: BoxConstraints.expand(),
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  FlatButton(
-                    onPressed: () async {
-                      var weatherData = await weatherModel.getLocationWeather();
-                      updateUI(weatherData);
-                    },
-                    child: Icon(
-                      Icons.near_me,
-                      size: 50.0,
-                    ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: Container(
+                alignment: Alignment.bottomCenter,
+                color: Color.fromARGB(153, 22, 31, 26),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      FlatButton(
+                        onPressed: () async {
+                          var weatherData =
+                              await weatherModel.getLocationWeather();
+                          updateUI(weatherData);
+                        },
+                        child: CircleAvatar(
+                          radius: 25,
+                          child: Icon(
+                            Icons.near_me,
+                            size: 30,
+                            color: Color.fromARGB(255, 26, 203, 121),
+                          ),
+                        ),
+                      ),
+                      FlatButton(
+                        onPressed: () {},
+                        child: CircleAvatar(
+                          radius: 25,
+                          child: Icon(
+                            Icons.location_city,
+                            size: 30,
+                            color: Color.fromARGB(255, 26, 203, 121),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  FlatButton(
-                    onPressed: () {},
-                    child: Icon(
-                      Icons.location_city,
-                      size: 50.0,
-                    ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 5,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    weatherIcon,
+                    style: kConditionTextStyle,
+                  ),
+                  Text(
+                    '${temperature.toInt().toString()} ℃',
+                    style: kTempTextStyle,
                   ),
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 15.0),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      temperature.toInt().toString(),
-                      style: kTempTextStyle,
-                    ),
-                    Text(
-                      '℃$weatherIcon',
-                      style: kConditionTextStyle,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 10.0),
+            ),
+            Expanded(
+              flex: 2,
+              child: Container(
+                alignment: Alignment.center,
+                color: Color.fromARGB(153, 22, 31, 26),
                 child: Text(
-                  "It's $weatherMessage time in $cityName!",
+                  "$weatherMessage in $cityName!",
                   textAlign: TextAlign.center,
                   style: kMessageTextStyle,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

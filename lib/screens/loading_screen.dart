@@ -5,6 +5,7 @@ import 'package:clima/services/networking.dart';
 import 'package:flutter/material.dart';
 
 import 'location_screen.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -34,7 +35,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 236, 182, 162),
+      body: Center(
+          child: SpinKitSpinningLines(
+        color: Colors.white,
+        size: 300,
+      )),
     );
   }
 }
