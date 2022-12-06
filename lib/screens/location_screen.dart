@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:clima/screens/city_screen.dart';
 import 'package:clima/screens/loading_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,6 @@ class _LocationScreenState extends State<LocationScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     print(widget.locationWeather);
     updateUI(widget.locationWeather);
@@ -35,11 +35,13 @@ class _LocationScreenState extends State<LocationScreen> {
         condition = 0;
         cityName = "Unknown";
       }
-      temperature = weatherData['main']['temp'];
-      condition = weatherData['weather'][0]['id'];
-      cityName = weatherData['name'];
-      weatherIcon = weatherModel.getWeatherIcon(condition);
-      weatherMessage = weatherModel.getMessage(temperature.toInt());
+      if (weatherData != null) {
+        temperature = weatherData['main']['temp'];
+        condition = weatherData['weather'][0]['id'];
+        cityName = weatherData['name'];
+        weatherIcon = weatherModel.getWeatherIcon(condition);
+        weatherMessage = weatherModel.getMessage(temperature.toInt());
+      }
 
       print("##########");
       print(temperature);
@@ -90,7 +92,19 @@ class _LocationScreenState extends State<LocationScreen> {
                         ),
                       ),
                       FlatButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          var cityNameInput = await Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return CityScreen();
+                          }));
+
+                          if (cityNameInput != null) {
+                            var weatherData = await weatherModel
+                                .getCityWeather(cityNameInput);
+                            updateUI(weatherData);
+                            print(weatherData);
+                          }
+                        },
                         child: CircleAvatar(
                           radius: 25,
                           child: Icon(
@@ -124,6 +138,7 @@ class _LocationScreenState extends State<LocationScreen> {
             Expanded(
               flex: 2,
               child: Container(
+                padding: EdgeInsets.all(10),
                 alignment: Alignment.center,
                 color: Color.fromARGB(153, 22, 31, 26),
                 child: Text(
